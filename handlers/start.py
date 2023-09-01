@@ -1,24 +1,43 @@
-
-from aiogram import types,Dispatcher
-from config import bot
-from database.sql_commands import Database
-from const import START_MENU_TEXT
-
-async def start_button(message: types.Message):
-    print(message)
-    Database().insert_table(
-    telegram_id= message.from_user.id,
-    username= message.from_user.username,
-    firstname= message.from_user.first_name,
-    lastname= message.from_user.last_name,
-    )
-    with open(r"C:\Users\Lenovo\PycharmProjects\GOOD __NURIK_ BOT__2\handlers\media\2ac66980-0f3d-11eb-8e62-693087aa1f67.pngimages.png","rb") as photo:
-        await bot.send_photo(
-            chat_id=message.chat.id,
-            photo = photo,
-            caption=START_MENU_TEXT
-        )
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-def register_start_handlers(dp : Dispatcher):
-    dp.register_message_handler(start_button,commands=['start'])
+async def friend_unfriend_button(id):
+    markup = InlineKeyboardMarkup()
+    friend_button = InlineKeyboardButton('Друг👍🏻',
+                                         callback_data=f'friend_button_{id}')
+    unfriend_button = InlineKeyboardButton('Недруг👎🏻',
+                                           callback_data='unfriend_button')
+    markup.row(friend_button, unfriend_button)
+    return markup
+
+
+async def start_menu_button():
+    markup = InlineKeyboardMarkup(row_width=2)
+    play_game = InlineKeyboardButton('Друг👍🏻-Недруг?👎🏻',
+                                     callback_data='play_game')
+    create_link = InlineKeyboardButton('Реф. ссылка🔗',
+                                       callback_data='reference_link')
+    list_referral = InlineKeyboardButton('Список Рефералов📃',
+                                         callback_data='list_referral')
+    my_balance_button = InlineKeyboardButton('Мой баланс💵',
+                                             callback_data='my_balance')
+    last_news = InlineKeyboardButton('Последние новости Кыргызстана📰',
+                                     callback_data='last_news')
+    markup.add(play_game, create_link, list_referral, my_balance_button,last_news)
+    return markup
+
+
+
+async def send_money_to_user_button():
+    markup = InlineKeyboardMarkup()
+    send_money = InlineKeyboardButton('Отправить деньги пользователю💸💸💸',
+                                         callback_data='money')
+    markup.row(send_money)
+    return markup
+
+async def save_news_button(id):
+    markup = InlineKeyboardMarkup()
+    save_news = InlineKeyboardButton('Сохранить новости🗞️',
+                                      callback_data=f'save_news_{id}')
+    markup.row(save_news)
+    return markup
